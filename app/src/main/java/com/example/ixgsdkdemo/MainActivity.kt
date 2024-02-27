@@ -12,7 +12,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.ixgcore.HelloWorld
 import com.example.ixgsdkdemo.ui.theme.IXGSDKDemoTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -42,7 +41,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun Greeting(name: String, modifier: Modifier = Modifier) {
     Text(
-        text = "${HelloWorld().hello} $name!",
+        text = "Hello $name!",
         modifier = modifier
     )
 }
