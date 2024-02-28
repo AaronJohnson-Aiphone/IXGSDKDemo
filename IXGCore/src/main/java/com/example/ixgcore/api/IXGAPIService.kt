@@ -13,6 +13,6 @@ interface IIXGAPIService {
     @POST
     suspend fun sendQRCode(
         @Url apiUrl: String,
-        @Body qrData: QRRequestData
+        @Body qrData: QRRequestWrapper
     ): Response<String>
 }

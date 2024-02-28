@@ -5,6 +5,7 @@ import com.example.ixgcore.api.IIXGAPIService
 import com.example.ixgcore.api.IXGAPIConstants
 import com.example.ixgcore.api.IXGAPIRoute
 import com.example.ixgcore.api.QRRequestData
+import com.example.ixgcore.api.QRRequestWrapper
 import com.example.ixgcore.api.QRResponseData
 import com.example.ixgcore.datastore.IIXGSDKDataStore
 import kotlinx.serialization.decodeFromString
@@ -21,7 +22,8 @@ class RegistrationManager @Inject constructor(
 
     override suspend fun sendQRCode(qrCode: String): Result<Nothing?> {
         val qrData = QRRequestData(roomCode = qrCode, sid = constants.getSidFromDate(), sys = constants.sys, sysver = constants.sysver)
-        val response = apiService.sendQRCode(dataStore.getServerUrl() + IXGAPIRoute.SEND_QR_CODE, qrData)
+        val qrWrapper = QRRequestWrapper(qrRequestData = qrData)
+        val response = apiService.sendQRCode(dataStore.getServerUrl() + IXGAPIRoute.SEND_QR_CODE, qrWrapper)
         return if (response.isSuccessful) {
             when(response.body()) {
                 null -> Result.failure(Exception("Failed to send QR code"))

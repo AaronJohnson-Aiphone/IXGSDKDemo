@@ -5,6 +5,13 @@ import com.example.ixgcore.ACLApp
 import kotlinx.serialization.*
 
 
+//QR Request ----------------------------------------------
+@Keep
+@Serializable
+data class QRRequestWrapper(
+    @SerialName("BODY")      val qrRequestData: QRRequestData,
+)
+
 @Keep
 @Serializable
 data class QRRequestData(
@@ -14,6 +21,7 @@ data class QRRequestData(
     @SerialName("SYSVER")        val sysver: String = "",
 )
 
+//QR Response ----------------------------------------------
 @Keep
 @Serializable
 data class QRResponseData(
@@ -28,6 +36,7 @@ data class QRResponseData(
     @SerialName("TERMLIST")      val apps: List<ACLApp> = emptyList(),
 )
 
+//Register Data ----------------------------------------------
 @Keep
 @Serializable
 data class RegisterData(
