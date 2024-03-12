@@ -1,19 +1,12 @@
 package com.example.ixgcore.api
-import kotlinx.serialization.SerialName
 import retrofit2.Response
 import retrofit2.http.Body
-import retrofit2.http.Headers
 import retrofit2.http.POST
-import retrofit2.http.Url
 
 interface IIXGAPIService {
-    @Headers(
-        "Accept: */*",
-        "Content-Type: application/json"
-    )
-    @POST
+
+    @POST("getRoomApp")
     suspend fun sendQRCode(
-        @Url apiUrl: String,
-        @Body qrData: QRRequestWrapper
+        @Body qrWrapper: QRRequestWrapper
     ): Response<String>
 }

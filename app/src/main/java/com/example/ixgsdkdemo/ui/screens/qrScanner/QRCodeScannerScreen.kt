@@ -1,81 +1,100 @@
 package com.example.ixgsdkdemo.ui.screens.qrScanner
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
+import android.view.ViewGroup.LayoutParams.MATCH_PARENT
+import android.widget.LinearLayout
+import androidx.camera.view.LifecycleCameraController
+import androidx.camera.view.PreviewView
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.unit.dp
-import com.example.ixgsdkdemo.ui.screens.common.ErrorScreen
-import com.example.ixgsdkdemo.ui.screens.common.LoadingScreen
-import com.example.ixgsdkdemo.ui.theme.IXGSDKDemoTheme
+import androidx.compose.ui.viewinterop.AndroidView
+import com.example.ixgcore.RegistrationManager
+import com.google.mlkit.vision.barcode.common.Barcode
+import com.google.mlkit.vision.codescanner.GmsBarcodeScannerOptions
+
+
 
 @Composable
 fun QRScannerScreen(
-    qrScannerUiState: QRScannerUiState,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp)
 ) {
-    when (qrScannerUiState) {
-        is QRScannerUiState.Loading -> LoadingScreen(modifier = modifier.fillMaxSize())
-        is QRScannerUiState.Success -> QRScanner(
-            networkResponse = qrScannerUiState.photos,
-            modifier = modifier.fillMaxSize())
-        is QRScannerUiState.Error -> ErrorScreen(message = qrScannerUiState.errorMessage,
-            modifier = modifier.fillMaxSize())
-    }
+    QRScanner(
+        modifier = modifier.fillMaxSize())
 }
 
 @Composable
 fun QRScanner(
-    networkResponse: String,
     modifier: Modifier = Modifier)
 {
-    Column (
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
-        modifier = modifier
-    ){
-        Text(
-            textAlign = TextAlign.Center,
-            text = networkResponse
-        )
-    }
+//    Column (
+//        horizontalAlignment = Alignment.CenterHorizontally,
+//        verticalArrangement = Arrangement.Center,
+//        modifier = modifier
+//    ){
+//        Text(
+//            textAlign = TextAlign.Center,
+//            text = networkResponse
+//        )
+//    }
+    CameraView(viewModel = QRCodeViewModel())
 }
 
-@Preview(showSystemUi = true)
 @Composable
-fun QRScannerPreview_Success() {
-    IXGSDKDemoTheme {
-        Surface {
-            QRScannerScreen(qrScannerUiState = QRScannerUiState.Success("Some string"))
-        }
-    }
-}
+fun CameraView(viewModel: QRCodeViewModel) {
 
-@Preview(showSystemUi = true)
-@Composable
-fun QRScannerPreview_Loading() {
-    IXGSDKDemoTheme {
-        Surface {
-            QRScannerScreen(qrScannerUiState = QRScannerUiState.Loading)
-        }
-    }
-}
+    val context = LocalContext.current
+    val lifecycleOwner = LocalLifecycleOwner.current
+    val cameraController = remember { LifecycleCameraController(context) }
 
-@Preview(showSystemUi = true)
-@Composable
-fun QRScannerPreview_Error() {
-    IXGSDKDemoTheme {
-        Surface {
-            QRScannerScreen(qrScannerUiState = QRScannerUiState.Error("Failed to load"))
+    AndroidView(modifier = Modifier
+        .fillMaxSize(),
+        factory = { mContext ->
+        PreviewView(mContext).apply {
+            layoutParams = LinearLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT)
+            setBackgroundColor(0)
+            scaleType = PreviewView.ScaleType.FILL_START
+        }.also { previewView ->
+            previewView.controller = cameraController
+            cameraController.bindToLifecycle(lifecycleOwner)
         }
-    }
+    })
+    val options = GmsBarcodeScannerOptions.Builder()
+        .setBarcodeFormats(Barcode.FORMAT_QR_CODE)
+        .enableAutoZoom()
+        .build()
+
+    var qrCode = ""
+
+    LaunchedEffect(Unit, block =  {
+//        val scanner = GmsBarcodeScanning.getClient(context, options)
+//        scanner.startScan()
+//            .addOnSuccessListener { barcode ->
+//                // task completed successfully
+//                val rawValue: String? = barcode.rawValue
+//                Log.v("QR_SCAN_SCREEN", "Scan result: $rawValue")
+//                if(!rawValue.isNullOrEmpty())
+//                    qrCode = rawValue
+//                else
+//                    Log.v("QR_SCAN_SCREEN", "String is NULL or EMPTY")
+//            }
+//            .addOnCanceledListener {
+//                // task canceled
+//                Log.v("QR_SCAN_SCREEN", "Scanner Canceled")
+//            }
+//            .addOnFailureListener { e ->
+//                // task failed with an exception
+//                //viewModel.errorMessage = e.message.toString()
+//                Log.v("QR_SCAN_SCREEN", "Scanner Failed: ${e.message}")
+//            }
+
+        val registrationManager = RegistrationManager()
+        val result = registrationManager.sendQRCode("SJq03d!CKr!}=:$<'x@L,WV\\")
+    })
 }
