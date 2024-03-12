@@ -1,4 +1,5 @@
 package com.example.ixgcore.api
+import kotlinx.serialization.SerialName
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.Headers

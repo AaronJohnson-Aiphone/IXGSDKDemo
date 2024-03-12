@@ -24,6 +24,11 @@ data class QRRequestData(
 //QR Response ----------------------------------------------
 @Keep
 @Serializable
+data class QRResponseDataWrapper(
+    @SerialName("BODY") val qrResponseData: QRResponseData
+)
+@Keep
+@Serializable
 data class QRResponseData(
     @SerialName("PROPID")        val propertyId: String = "",
     @SerialName("BLDNO")         val buildingNumber: String = "",
