@@ -15,15 +15,15 @@ import javax.inject.Singleton
 
 @Singleton
 class RegistrationManager @Inject constructor(
-    private val apiService: IIXGAPIService,
     private val dataStore: IIXGSDKDataStore
 ) : IRegistrationManager {
     private val constants = IXGAPIConstants()
+    private val apiService = IIXGAPIService.create(constants.defaultServerURl)
 
     override suspend fun sendQRCode(qrCode: String): Result<Nothing?> {
         val qrData = QRRequestData(roomCode = qrCode, sid = constants.getSidFromDate(), sys = constants.sys, sysver = constants.sysver)
         val qrWrapper = QRRequestWrapper(qrRequestData = qrData)
-        val response = apiService.sendQRCode(dataStore.getServerUrl() + IXGAPIRoute.SEND_QR_CODE, qrWrapper)
+        val response = apiService.sendQRCode(dataStore.getServerUrl() + IXGAPIRoute.SEND_QR_CODE.api, qrData)
         return if (response.isSuccessful) {
             when(response.body()) {
                 null -> Result.failure(Exception("Failed to send QR code"))
@@ -60,5 +60,4 @@ class RegistrationManager @Inject constructor(
         }
         return null
     }
-
 }

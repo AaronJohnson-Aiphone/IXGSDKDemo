@@ -14,6 +14,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
@@ -58,6 +59,11 @@ IXGCoreModule {
         val builder = OkHttpClient.Builder()
         builder.sslSocketFactory(sslContext.socketFactory, x509TrustManager)
         builder.hostnameVerifier { _, _ -> true }
+
+        val logging = HttpLoggingInterceptor()
+        logging.setLevel(HttpLoggingInterceptor.Level.BODY)
+        builder.addInterceptor(logging)
+
         return builder.build()
     }
 
@@ -77,9 +83,6 @@ IXGCoreModule {
     @Provides
     @Singleton
     fun provideIXGSDKManager(registrationManager: IRegistrationManager): IRegistrationManager = registrationManager
-    @Provides
-    @Singleton
-    fun provideApiService(retrofit: Retrofit): IIXGAPIService = retrofit.create(IIXGAPIService::class.java)
 
     @Provides
     @Singleton

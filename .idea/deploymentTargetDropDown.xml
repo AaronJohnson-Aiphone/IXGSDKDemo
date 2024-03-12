@@ -1,17 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="deploymentTargetDropDown">
-    <targetSelectedWithDropDown>
-      <Target>
-        <type value="QUICK_BOOT_TARGET" />
-        <deviceKey>
-          <Key>
-            <type value="VIRTUAL_DEVICE_PATH" />
-            <value value="$USER_HOME$/.android/avd/Pixel_7_Pro_API_UpsideDownCakePrivacySandbox.avd" />
-          </Key>
-        </deviceKey>
-      </Target>
-    </targetSelectedWithDropDown>
-    <timeTargetWasSelectedWithDropDown value="2024-02-28T22:41:49.433934Z" />
+    <value>
+      <entry key="IXGSDKDataStoreTest">
+        <State />
+      </entry>
+      <entry key="app">
+        <State />
+      </entry>
+      <entry key="appSlotIdTest2()">
+        <State />
+      </entry>
+      <entry key="defaultServerURLTest()">
+        <State />
+      </entry>
+      <entry key="sendQRCodeTest()">
+        <State />
+      </entry>
+      <entry key="serverURLTest()">
+        <State />
+      </entry>
+    </value>
   </component>
 </project>

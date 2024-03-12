@@ -6,6 +6,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
 import com.example.ixgcore.IXGAppInfo
+import com.example.ixgcore.api.IXGAPIConstants
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.firstOrNull
@@ -18,8 +19,6 @@ import javax.inject.Singleton
 class IXGSDKDataStore @Inject constructor(
     private val userDataStorePreferences: DataStore<Preferences>
 ) : IIXGSDKDataStore {
-    private val defaultServerURl = "https://api-ixg1-r2.ixg.aiphone-app.net"
-
 
     private suspend fun setData(newData: String, key: Preferences.Key<String>){
         userDataStorePreferences.edit { preferences ->
@@ -27,7 +26,7 @@ class IXGSDKDataStore @Inject constructor(
         }
     }
 
-    private suspend fun getData(key: Preferences.Key<String>): Flow<String> = userDataStorePreferences.data
+    private suspend fun getData(key: Preferences.Key<String>): Flow<String?> = userDataStorePreferences.data
         .catch {  exception ->
             // dataStore.data throws an IOException when an error is encountered when reading data
             if (exception is IOException) {
@@ -37,14 +36,14 @@ class IXGSDKDataStore @Inject constructor(
                 throw exception
             }
         }.map { preferences ->
-            preferences[key] ?: ""
+            preferences[key]
         }
 
     override suspend fun setServerUrl(serverUrl: String) {
         setData(serverUrl, SDKPreferenceKeyDef.SERVER_URL)
     }
 
-    override suspend fun getServerUrl(): String = getData(SDKPreferenceKeyDef.SERVER_URL).firstOrNull() ?: defaultServerURl
+    override suspend fun getServerUrl(): String = getData(SDKPreferenceKeyDef.SERVER_URL).firstOrNull() ?: IXGAPIConstants().defaultServerURl
 
     override suspend fun setName(name: String) {
         setData(name, SDKPreferenceKeyDef.NAME)
