@@ -39,9 +39,10 @@ class RegistrationManager: IRegistrationManager {
                 return Result.failure(Exception("Failed to send QR code"))
             }
             else -> {
+                val moshi = Moshi.Builder().build()
+                val jsonAdapter = moshi.adapter(QRResponseData::class.java)
+
                 return if(response.isSuccessful) {
-                    val moshi = Moshi.Builder().build()
-                    val jsonAdapter = moshi.adapter(QRResponseData::class.java)
                     val qrResponseData: QRResponseData? = jsonAdapter.fromJson(response.body()!!)
 
                     val selectedAppSlot = findFirstVacantAppSlot(qrResponseData!!.apps)
@@ -56,8 +57,11 @@ class RegistrationManager: IRegistrationManager {
                 }
                 else{// if not in 200 range
                     // TODO handle specific error codes
-                    // TODO handle specific body error messages
-                    Result.failure(Exception("${response.body()}"))
+
+                    val qrResponseData: QRResponseData? = response.errorBody()?.string()
+                        ?.let { jsonAdapter.fromJson(it) }
+                    Log.d("RegistrationManager", "${qrResponseData?.message}")
+                    Result.failure(Exception("${qrResponseData?.message}"))
                 }
             }
         }
@@ -80,9 +84,10 @@ class RegistrationManager: IRegistrationManager {
                 return Result.failure(Exception("Failed to register app"))
             }
             else -> {
+                val moshi = Moshi.Builder().build()
+                val jsonAdapter = moshi.adapter(RegisterResponseData::class.java)
+
                 return if(response.isSuccessful) {
-                    val moshi = Moshi.Builder().build()
-                    val jsonAdapter = moshi.adapter(RegisterResponseData::class.java)
                     val registerResponseData: RegisterResponseData? = jsonAdapter.fromJson(response.body()!!)
 
                     //TODO handle response data
@@ -90,8 +95,11 @@ class RegistrationManager: IRegistrationManager {
                     Result.success(null)
                 } else{// if not in 200 range
                     // TODO handle specific error codes
-                    // TODO handle specific body error messages
-                    Result.failure(Exception("${response.body()}"))
+
+                    val registerResponseData: RegisterResponseData? = response.errorBody()?.string()
+                        ?.let { jsonAdapter.fromJson(it) }
+                    Log.d("RegistrationManager", "${registerResponseData?.message}")
+                    Result.failure(Exception("${registerResponseData?.message}"))
                 }
             }
         }
@@ -116,9 +124,10 @@ class RegistrationManager: IRegistrationManager {
 
                     val moshi = Moshi.Builder().build()
                     val jsonAdapter = moshi.adapter(RenameResponseData::class.java)
-                    val renameResponseData: RenameResponseData? = jsonAdapter.fromJson(response.body()!!)
+                    val renameResponseData: RenameResponseData? = response.errorBody()?.string()
+                        ?.let { jsonAdapter.fromJson(it) }
                     Log.d("RegistrationManager", "${renameResponseData?.message}")
-                    Result.failure(Exception("${response.body()}"))
+                    Result.failure(Exception("${renameResponseData?.message}"))
                 }
             }
         }
@@ -134,9 +143,10 @@ class RegistrationManager: IRegistrationManager {
                 return Result.failure(Exception("Failed to deregister app"))
             }
             else -> {
+                val moshi = Moshi.Builder().build()
+                val jsonAdapter = moshi.adapter(DeregisterResponseData::class.java)
+
                 return if(response.isSuccessful) {
-                    val moshi = Moshi.Builder().build()
-                    val jsonAdapter = moshi.adapter(DeregisterResponseData::class.java)
                     val deregisterResponseData: DeregisterResponseData? = jsonAdapter.fromJson(response.body()!!)
 
                     //TODO handle response data
@@ -144,8 +154,11 @@ class RegistrationManager: IRegistrationManager {
                     Result.success(null)
                 } else{// if not in 200 range
                     // TODO handle specific error codes
-                    // TODO handle specific body error messages
-                    Result.failure(Exception("${response.body()}"))
+
+                    val deregisterResponseData: DeregisterResponseData? = response.errorBody()?.string()
+                        ?.let { jsonAdapter.fromJson(it) }
+                    Log.d("RegistrationManager", "${deregisterResponseData?.message}")
+                    Result.failure(Exception("${deregisterResponseData?.message}"))
                 }
             }
         }
@@ -161,9 +174,10 @@ class RegistrationManager: IRegistrationManager {
                 return Result.failure(Exception("Failed to get status"))
             }
             else -> {
+                val moshi = Moshi.Builder().build()
+                val jsonAdapter = moshi.adapter(StatusResponseData::class.java)
+
                 return if(response.isSuccessful) {
-                    val moshi = Moshi.Builder().build()
-                    val jsonAdapter = moshi.adapter(StatusResponseData::class.java)
                     val statusResponseData: StatusResponseData? = jsonAdapter.fromJson(response.body()!!)
 
                     //TODO handle response data
@@ -171,8 +185,11 @@ class RegistrationManager: IRegistrationManager {
                     Result.success(null)
                 } else{// if not in 200 range
                     // TODO handle specific error codes
-                    // TODO handle specific body error messages
-                    Result.failure(Exception("${response.body()}"))
+
+                    val statusResponseData: StatusResponseData? = response.errorBody()?.string()
+                        ?.let { jsonAdapter.fromJson(it) }
+                    Log.d("RegistrationManager", "${statusResponseData?.message}")
+                    Result.failure(Exception("${statusResponseData?.message}"))
                 }
             }
         }

@@ -10,6 +10,7 @@ import okhttp3.Request
 import okhttp3.Response
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
+import retrofit2.converter.scalars.ScalarsConverterFactory
 
 class Module {
     //private val baseURL = "https://api-ixg1-r2.ixg.aiphone-app.net/"// Phase 1A
@@ -26,6 +27,7 @@ class Module {
     private val retrofitACL = Retrofit.Builder()
         .client(client)
         .baseUrl(baseURL)
+        .addConverterFactory(ScalarsConverterFactory.create())
         .addConverterFactory(MoshiConverterFactory.create(moshi))
         .build()
 
@@ -54,7 +56,8 @@ class Module {
             val response = chain.proceed(request)
 
             // response body formatting for logging
-            val formattedResponse = response.body()?.string()?.replace("{", "{\n")?.replace(",", ",\n")?.replace("}", "\n}")
+            val responseBody = response.peekBody(Long.MAX_VALUE)
+            val formattedResponse = responseBody.string().replace("{", "{\n").replace(",", ",\n").replace("}", "\n}")
             Log.i("OKHTTP_LOG", "Received response for ${response.request().url()}, code: ${response.code()} body: $formattedResponse")
 
             return response
