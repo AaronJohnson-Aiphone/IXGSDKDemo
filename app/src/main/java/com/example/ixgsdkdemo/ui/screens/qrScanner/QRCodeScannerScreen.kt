@@ -1,5 +1,6 @@
 package com.example.ixgsdkdemo.ui.screens.qrScanner
 
+import android.util.Log
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.widget.LinearLayout
 import androidx.camera.view.LifecycleCameraController
@@ -96,5 +97,11 @@ fun CameraView(viewModel: QRCodeViewModel) {
 
         val registrationManager = RegistrationManager()
         val result = registrationManager.sendQRCode("SJq03d!CKr!}=:$<'x@L,WV\\")
+        if (result.isSuccess) {
+            val name: String? = result.getOrNull()
+            Log.d("RegistrationManager", "send QR body: $name")
+        } else {
+            // Handle error
+        }
     })
 }

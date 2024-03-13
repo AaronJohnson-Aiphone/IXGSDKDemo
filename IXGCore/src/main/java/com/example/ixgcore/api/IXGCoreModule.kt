@@ -12,8 +12,8 @@ import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 
 class IXGCoreModule {
-    //private val baseURL = "https://api-ixg1-r2.ixg.aiphone-app.net/"
-    private val baseURL = "https://api-ixg3-r2.ixg.aiphone-app.net"//NON Phase 1A
+    //private val baseURL = "https://api-ixg1-r2.ixg.aiphone-app.net/"// Phase 1A
+    private val baseURL = "https://api-ixg3-r2.ixg.aiphone-app.net"
 
     private val client = OkHttpClient.Builder()
         .addInterceptor(LoggingInterceptor)
@@ -40,22 +40,21 @@ class IXGCoreModule {
     companion object LoggingInterceptor: Interceptor {
 
         override fun intercept(chain: Interceptor.Chain): Response {
+            // request-----------------------------------------------
             val request: Request = chain.request()
 
+            // request body formatting for logging
             val buf = okio.Buffer()
             request.body()?.writeTo(buf)
             val requestString = buf.readUtf8()
-
             val formattedRequest = requestString.replace("{", "{\n").replace(",", ",\n").replace("}", "\n}")
-
             Log.i("OKHTTP_LOG", "Sending request ${request.url()} with payload: $formattedRequest")
 
+            // response----------------------------------------------
             val response = chain.proceed(request)
 
-
-            val formattedResponse = response.body()?.string()?.replace("{", "{\n")?.replace(",", ",\n")
-                ?.replace("}", "\n}")
-
+            // response body formatting for logging
+            val formattedResponse = response.body()?.string()?.replace("{", "{\n")?.replace(",", ",\n")?.replace("}", "\n}")
             Log.i("OKHTTP_LOG", "Received response for ${response.request().url()}, code: ${response.code()} body: $formattedResponse")
 
             return response
