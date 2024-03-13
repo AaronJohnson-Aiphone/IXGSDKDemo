@@ -4,7 +4,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-class IXGAPIConstants {
+class Constants {
     val sys = "3"
     val sysver = "1.2"
 

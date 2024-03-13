@@ -11,7 +11,7 @@ import okhttp3.Response
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 
-class IXGCoreModule {
+class Module {
     //private val baseURL = "https://api-ixg1-r2.ixg.aiphone-app.net/"// Phase 1A
     private val baseURL = "https://api-ixg3-r2.ixg.aiphone-app.net"
 
@@ -29,8 +29,8 @@ class IXGCoreModule {
         .addConverterFactory(MoshiConverterFactory.create(moshi))
         .build()
 
-    val retrofitServiceACL: IIXGAPIService by lazy {
-        retrofitACL.create(IIXGAPIService::class.java)
+    val retrofitServiceACL: IService by lazy {
+        retrofitACL.create(IService::class.java)
     }
 
     val retrofitDataStoreACL: IIXGSDKDataStore by lazy {

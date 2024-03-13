@@ -1,6 +1,6 @@
 package com.example.ixgcore.api
 
-enum class IXGAPIRoute(val api: String) {
+enum class Routes(val api: String) {
     SEND_QR_CODE("/getRoomApp"), // returns the list of app slots for the unit
     REGISTER_APP("/regAppClient"), // registers the app to the provided app-slot
     DEREGISTER_APP("/unregAppClient"), // de-registers the app

@@ -1,30 +1,30 @@
 package com.example.ixgcore
 
 import android.util.Log
-import com.example.ixgcore.api.ACLAppData
-import com.example.ixgcore.api.DeregisterRequestData
-import com.example.ixgcore.api.DeregisterRequestDataWrapper
-import com.example.ixgcore.api.DeregisterResponseData
-import com.example.ixgcore.api.IXGAPIConstants
-import com.example.ixgcore.api.IXGCoreModule
-import com.example.ixgcore.api.QRRequestData
-import com.example.ixgcore.api.QRRequestWrapper
-import com.example.ixgcore.api.QRResponseData
-import com.example.ixgcore.api.RegisterRequestData
-import com.example.ixgcore.api.RegisterRequestDataWrapper
-import com.example.ixgcore.api.RegisterResponseData
-import com.example.ixgcore.api.RenameRequestData
-import com.example.ixgcore.api.RenameRequestDataWrapper
-import com.example.ixgcore.api.RenameResponseData
-import com.example.ixgcore.api.StatusRequestData
-import com.example.ixgcore.api.StatusRequestDataWrapper
-import com.example.ixgcore.api.StatusResponseData
+import com.example.ixgcore.api.Constants
+import com.example.ixgcore.api.Module
+import com.example.ixgcore.api.data.ACLAppData
+import com.example.ixgcore.api.data.DeregisterRequestData
+import com.example.ixgcore.api.data.DeregisterRequestDataWrapper
+import com.example.ixgcore.api.data.DeregisterResponseData
+import com.example.ixgcore.api.data.QRRequestData
+import com.example.ixgcore.api.data.QRRequestWrapper
+import com.example.ixgcore.api.data.QRResponseData
+import com.example.ixgcore.api.data.RegisterRequestData
+import com.example.ixgcore.api.data.RegisterRequestDataWrapper
+import com.example.ixgcore.api.data.RegisterResponseData
+import com.example.ixgcore.api.data.RenameRequestData
+import com.example.ixgcore.api.data.RenameRequestDataWrapper
+import com.example.ixgcore.api.data.RenameResponseData
+import com.example.ixgcore.api.data.StatusRequestData
+import com.example.ixgcore.api.data.StatusRequestDataWrapper
+import com.example.ixgcore.api.data.StatusResponseData
 import com.squareup.moshi.Moshi
 
 class RegistrationManager: IRegistrationManager {
-    private val constants = IXGAPIConstants()
-    private val apiService = IXGCoreModule().retrofitServiceACL
-    private val dataStore = IXGCoreModule().retrofitDataStoreACL
+    private val constants = Constants()
+    private val apiService = Module().retrofitServiceACL
+    private val dataStore = Module().retrofitDataStoreACL
 
     override suspend fun sendQRCode(qrCode: String): Result<String> {
         val qrData = QRRequestData(roomCode = qrCode, sid = constants.getSidFromDate(), sys = constants.sys, sysver = constants.sysver)

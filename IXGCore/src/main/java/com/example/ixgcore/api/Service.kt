@@ -1,9 +1,14 @@
 package com.example.ixgcore.api
+import com.example.ixgcore.api.data.DeregisterRequestDataWrapper
+import com.example.ixgcore.api.data.QRRequestWrapper
+import com.example.ixgcore.api.data.RegisterRequestDataWrapper
+import com.example.ixgcore.api.data.RenameRequestDataWrapper
+import com.example.ixgcore.api.data.StatusRequestDataWrapper
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.POST
 
-interface IIXGAPIService {
+interface IService {
 
     //registration------------------------------------------------
     @POST("getRoomApp")
