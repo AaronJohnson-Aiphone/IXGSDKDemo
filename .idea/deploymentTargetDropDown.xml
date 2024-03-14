@@ -2,10 +2,16 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
+      <entry key="DataStoreTest">
+        <State />
+      </entry>
+      <entry key="IXGSDKDataStoreTest">
+        <State />
+      </entry>
       <entry key="app">
         <State />
       </entry>
-      <entry key="appSlotIdTest2()">
+      <entry key="defaultServerURLTest()">
         <State />
       </entry>
     </value>

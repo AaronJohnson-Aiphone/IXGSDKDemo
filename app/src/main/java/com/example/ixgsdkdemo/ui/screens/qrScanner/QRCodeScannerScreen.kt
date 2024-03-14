@@ -20,7 +20,6 @@ import com.google.mlkit.vision.barcode.common.Barcode
 import com.google.mlkit.vision.codescanner.GmsBarcodeScannerOptions
 
 
-
 @Composable
 fun QRScannerScreen(
     modifier: Modifier = Modifier,
@@ -95,7 +94,7 @@ fun CameraView(viewModel: QRCodeViewModel) {
 //                Log.v("QR_SCAN_SCREEN", "Scanner Failed: ${e.message}")
 //            }
 
-        val registrationManager = RegistrationManager()
+        val registrationManager = RegistrationManager(context)
         val result = registrationManager.sendQRCode("SJq03d!CKr!}=:$<'x@L,WV\\")
         if (result.isSuccess) {
             val name: String? = result.getOrNull()

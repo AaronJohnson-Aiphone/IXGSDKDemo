@@ -2,7 +2,7 @@ package com.example.ixgcore.datastore
 
 import com.example.ixgcore.IXGAppInfo
 
-interface IIXGSDKDataStore {
+interface IDataStore {
 
     suspend fun setServerUrl(serverUrl: String)
 
@@ -27,4 +27,6 @@ interface IIXGSDKDataStore {
     suspend fun setIXGAppInfo(appInfo: IXGAppInfo)
 
     suspend fun getIXGAppInfo(): IXGAppInfo
+
+    suspend fun cleanUp()
 }

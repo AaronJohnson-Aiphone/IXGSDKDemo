@@ -2,7 +2,7 @@ package com.example.ixgcore.datastore
 
 import androidx.datastore.preferences.core.stringPreferencesKey
 
-object SDKPreferenceKeyDef {
+object PreferenceKeyDef {
     val SERVER_URL = stringPreferencesKey("server_url")
     val NAME = stringPreferencesKey("name")
     val PROPERTY_ID = stringPreferencesKey("property_id")
