@@ -35,11 +35,4 @@ interface IService {
     suspend fun checkConsentRoom(
         @Body statusRequestDataWrapper: StatusRequestDataWrapper
     ): Response<String>
-
-
-    //station management---------------------------------------
-    @POST("getRoomApp")
-    suspend fun getAddressBook(
-        @Body qrWrapper: QRRequestWrapper
-    ): Response<String>
 }

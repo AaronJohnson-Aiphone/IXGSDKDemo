@@ -1,7 +1,7 @@
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
-    id("kotlinx-serialization")
+    id("org.jetbrains.kotlin.plugin.serialization") version "1.8.10"
 }
 
 android {
@@ -49,9 +49,8 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-scalars:2.9.0")
     implementation("com.squareup.retrofit2:converter-moshi:2.9.0")
 
-    // Moshi
-    implementation("com.squareup.moshi:moshi-kotlin:1.13.0")
-    implementation("com.squareup.moshi:moshi-kotlin-codegen:1.13.0")
+    // Moshi Core
+    implementation("com.squareup.moshi:moshi-kotlin:1.15.0")
 
     implementation("javax.inject:javax.inject:1")
     implementation("androidx.datastore:datastore-preferences:1.0.0")

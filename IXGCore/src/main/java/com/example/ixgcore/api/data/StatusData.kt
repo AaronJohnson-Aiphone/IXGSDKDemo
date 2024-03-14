@@ -1,14 +1,11 @@
 package com.example.ixgcore.api.data
 
 import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
 
-@JsonClass(generateAdapter = true)
 data class StatusRequestDataWrapper(
     @Json(name = "BODY")           val sid: StatusRequestData,
 )
 
-@JsonClass(generateAdapter = true)
 data class StatusRequestData(
     @Json(name = "PROPID")        val propertyId: String = "",
     @Json(name = "CLIID")         val clientId: String = "",
@@ -18,7 +15,6 @@ data class StatusRequestData(
     @Json(name = "REGCODE")       val registrationCode: String = "",
 )
 
-@JsonClass(generateAdapter = true)
 data class StatusResponseData(
     @Json(name = "CONSENT")       val consent: String = "",
     @Json(name = "ROOMTYPE")      val roomType: String = "",

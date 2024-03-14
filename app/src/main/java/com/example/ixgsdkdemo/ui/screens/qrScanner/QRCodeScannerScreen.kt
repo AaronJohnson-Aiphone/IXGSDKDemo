@@ -99,7 +99,7 @@ fun CameraView(viewModel: QRCodeViewModel) {
         val result = registrationManager.sendQRCode("SJq03d!CKr!}=:$<'x@L,WV\\")
         if (result.isSuccess) {
             val name: String? = result.getOrNull()
-            Log.d("RegistrationManager", "send QR body: $name")
+            Log.d("QRCodeScannerScreen", "result body: $name")
         } else {
             // Handle error
         }

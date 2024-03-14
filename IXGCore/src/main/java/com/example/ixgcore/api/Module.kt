@@ -12,16 +12,13 @@ import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
 
+private val moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
+
 class Module {
     //private val baseURL = "https://api-ixg1-r2.ixg.aiphone-app.net/"// Phase 1A
     private val baseURL = "https://api-ixg3-r2.ixg.aiphone-app.net"
-
     private val client = OkHttpClient.Builder()
-        .addInterceptor(LoggingInterceptor)
-        .build()
-
-    private val moshi = Moshi.Builder()
-        .addLast(KotlinJsonAdapterFactory())
+        .addInterceptor(Module)
         .build()
 
     private val retrofitACL = Retrofit.Builder()

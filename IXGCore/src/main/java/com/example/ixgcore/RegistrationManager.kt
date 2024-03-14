@@ -9,7 +9,7 @@ import com.example.ixgcore.api.data.DeregisterRequestDataWrapper
 import com.example.ixgcore.api.data.DeregisterResponseData
 import com.example.ixgcore.api.data.QRRequestData
 import com.example.ixgcore.api.data.QRRequestWrapper
-import com.example.ixgcore.api.data.QRResponseData
+import com.example.ixgcore.api.data.QRResponseDataWrapper
 import com.example.ixgcore.api.data.RegisterRequestData
 import com.example.ixgcore.api.data.RegisterRequestDataWrapper
 import com.example.ixgcore.api.data.RegisterResponseData
@@ -19,7 +19,9 @@ import com.example.ixgcore.api.data.RenameResponseData
 import com.example.ixgcore.api.data.StatusRequestData
 import com.example.ixgcore.api.data.StatusRequestDataWrapper
 import com.example.ixgcore.api.data.StatusResponseData
+import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 
 class RegistrationManager: IRegistrationManager {
     private val constants = Constants()
@@ -32,39 +34,55 @@ class RegistrationManager: IRegistrationManager {
         val response = apiService.sendQRCode(qrWrapper)
         Log.d("RegistrationManager", "send QR code: ${response.code()}")
         Log.d("RegistrationManager", "send QR body: ${response.body()}")
+        Log.d("RegistrationManager", "raw response: ${response.raw()}")
+//        return Result.success(response.body().toString())
 
-        when(response.body()){
-            null -> {
-                Log.d("RegistrationManager", "send QR body is null")
-                return Result.failure(Exception("Failed to send QR code"))
-            }
-            else -> {
-                val moshi = Moshi.Builder().build()
-                val jsonAdapter = moshi.adapter(QRResponseData::class.java)
-
-                return if(response.isSuccessful) {
-                    val qrResponseData: QRResponseData? = jsonAdapter.fromJson(response.body()!!)
-
-                    val selectedAppSlot = findFirstVacantAppSlot(qrResponseData!!.apps)
-                        ?: return Result.failure(Exception("No open app slots"))
-
-                    val appInfo = IXGAppInfo(name = selectedAppSlot.name, propertyId = qrResponseData.propertyId.toInt(), qrCode = qrCode, appSlotID = selectedAppSlot.clientID)
-
-                    dataStore.setQRCode(qrCode)
-                    dataStore.setIXGAppInfo(appInfo)
-
-                    Result.success(appInfo.name)
-                }
-                else{// if not in 200 range
-                    // TODO handle specific error codes
-
-                    val qrResponseData: QRResponseData? = response.errorBody()?.string()
-                        ?.let { jsonAdapter.fromJson(it) }
-                    Log.d("RegistrationManager", "${qrResponseData?.message}")
-                    Result.failure(Exception("${qrResponseData?.message}"))
-                }
-            }
+        return if (response.isSuccessful) {
+            val moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
+            val adapter: JsonAdapter<QRResponseDataWrapper> = moshi.adapter(QRResponseDataWrapper::class.java)
+            val bodyJson = response.body()!!
+            val networkModel = adapter.fromJson(bodyJson)
+            Log.d("RegistrationManager", "post model conversion: $networkModel")
+            Result.success(bodyJson)
+        } else if (response.code() == 410) {
+            Result.failure(Exception("TODO: handle 410"))
+        } else {
+            Result.failure(Exception("Unhandled status code ${response.code()}"))
         }
+
+
+//        when(response){
+//            null -> {
+//                Log.d("RegistrationManager", "send QR body is null")
+//                return Result.failure(Exception("Failed to send QR code"))
+//            }
+//            else -> {
+//                val moshi = Moshi.Builder().build()
+//                val adapter: JsonAdapter<QRResponseData> = moshi.adapter(QRResponseData::class.java)
+//
+//                return if(response.isSuccessful) {
+//                    val qrResponseData: QRResponseData = adapter.fromJson(response)
+//
+//                    val selectedAppSlot = findFirstVacantAppSlot(qrResponseData!!.apps)
+//                        ?: return Result.failure(Exception("No open app slots"))
+//
+//                    val appInfo = IXGAppInfo(name = selectedAppSlot.name, propertyId = qrResponseData.propertyId.toInt(), qrCode = qrCode, appSlotID = selectedAppSlot.clientID)
+//
+//                    dataStore.setQRCode(qrCode)
+//                    dataStore.setIXGAppInfo(appInfo)
+//
+//                    Result.success(appInfo.name)
+//                }
+//                else{// if not in 200 range
+//                    // TODO handle specific error codes
+//
+//                    val qrResponseData: QRResponseData? = response.errorBody()?.string()
+//                        ?.let { jsonAdapter.fromJson(it) }
+//                    Log.d("RegistrationManager", "TODO")
+//                    Result.failure(Exception("fix this"))
+//                }
+//            }
+//        }
     }
 
     override suspend fun register(appName: String?): Result<Nothing?> {

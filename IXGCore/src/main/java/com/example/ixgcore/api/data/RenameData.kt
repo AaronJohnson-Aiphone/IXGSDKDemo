@@ -8,7 +8,6 @@ data class RenameRequestDataWrapper(
     @Json(name = "BODY")           val sid: RenameRequestData,
 )
 
-@JsonClass(generateAdapter = true)
 data class RenameRequestData(
     @Json(name = "ROOMCODE")      val roomCode: String = "",
     @Json(name = "PROPID")        val propertyId: String = "",
@@ -19,7 +18,6 @@ data class RenameRequestData(
     @Json(name = "SID")           val sid: String = "",
 )
 
-@JsonClass(generateAdapter = true)
 data class RenameResponseData(
     @Json(name = "message")       val message: String = "",
 )
