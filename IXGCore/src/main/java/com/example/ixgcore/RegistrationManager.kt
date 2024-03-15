@@ -1,9 +1,8 @@
 package com.example.ixgcore
 
-import android.content.Context
 import android.util.Log
 import com.example.ixgcore.api.Constants
-import com.example.ixgcore.api.Module
+import com.example.ixgcore.api.IService
 import com.example.ixgcore.api.data.ACLAppData
 import com.example.ixgcore.api.data.DeregisterRequestData
 import com.example.ixgcore.api.data.DeregisterRequestDataWrapper
@@ -25,12 +24,12 @@ import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 
-class RegistrationManager(applicationContext: Context): IRegistrationManager {
-    private val constants = Constants()
-    private val apiService = Module().retrofitServiceACL
-    private val dataStore = DataStore(applicationContext)
+class RegistrationManager(
+    private val dataStore: DataStore,
+    private val apiService: IService,
+    private val constants: Constants): IRegistrationManager {
 
-    override suspend fun sendQRCode(qrCode: String): Result<String> {
+    override suspend fun sendQRCode(qrCode: String): Result<Nothing?> {
         val qrData = QRRequestData(roomCode = qrCode, sid = constants.getSidFromDate(), sys = constants.sys, sysver = constants.sysver)
         val qrWrapper = QRRequestWrapper(qrData)
         val response = apiService.sendQRCode(qrWrapper)
@@ -49,7 +48,7 @@ class RegistrationManager(applicationContext: Context): IRegistrationManager {
             val appInfo = IXGAppInfo(name = selectedAppSlot.name, propertyId = qrResponseData.propertyId.toInt(), qrCode = qrCode, appSlotID = selectedAppSlot.clientID)
             dataStore.setQRCode(qrCode)
             dataStore.setIXGAppInfo(appInfo)
-            Result.success(appInfo.name)
+            Result.success(null)
 
         } else if (response.code() == 410) {
             Result.failure(Exception("TODO: handle 410"))
@@ -58,12 +57,10 @@ class RegistrationManager(applicationContext: Context): IRegistrationManager {
         }
     }
 
-    override suspend fun register(appName: String?): Result<Nothing?> {
-        if(!appName.isNullOrEmpty()){ // if they provided a name for the app
-            val renameResult = rename(appName)
-            if(renameResult.isFailure){
-                return Result.failure(Exception(renameResult.exceptionOrNull()))
-            }
+    override suspend fun register(appName: String): Result<Nothing?> {
+        val renameResult = rename(appName)
+        if(renameResult.isFailure){
+            return Result.failure(Exception(renameResult.exceptionOrNull()))
         }
 
         val registerData = RegisterRequestData()//TODO fill in
