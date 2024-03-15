@@ -1,6 +1,8 @@
 package com.example.ixgsdkdemo
 
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -21,7 +23,7 @@ fun AppNavigation(
     ) {
 
         composable(AppScreenRoute.QRScanner.name) {
-            QRScannerScreen()
+            QRScannerScreen(navController = navController, modifier = Modifier.fillMaxSize())
         }
 
         composable(AppScreenRoute.Registration.name + "/{roomCode}/{appName}",
