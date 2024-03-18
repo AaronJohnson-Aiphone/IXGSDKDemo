@@ -10,11 +10,11 @@ import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 
-class StationManager(
+class StationsManager(
     private val dataStore: DataStore,
     private val apiService: IService,
-    private val constants: Constants): IStationManager {
-    override suspend fun getStationList(): Result<List<Station>?> {
+    private val constants: Constants): IStationsManager {
+    override suspend fun getStations(): Result<List<Station>?> {
         val addressBookRequestData = AddressBookRequestData(sid = constants.getSidFromDate(), sys = constants.sys, propertyID = dataStore.getPropertyId(),
             clientID = dataStore.getIXGAppInfo().appSlotID, registrationCode = dataStore.getRegistrationCode())
 
@@ -41,15 +41,12 @@ class StationManager(
 
     private fun convertACLAddressBookToStationList(addressBookData: ACLAddressBookData): List<Station> {
         val stations = mutableListOf<Station>()
-        //TODO convert addressBookData to List<Station>
         for(i in 0 until addressBookData.stationNumbers.size){
             val station = Station(number = addressBookData.stationNumbers[i].toInt(),
                 name = addressBookData.stationNames[i].substringAfter("&&&"),
                 type = addressBookData.stationTypes[i], canUnlock = addressBookData.unlockAuthorization[i], soundCodec = addressBookData.soundCodec[i])
             stations.add(station)
         }
-
-
         return stations
     }
 }

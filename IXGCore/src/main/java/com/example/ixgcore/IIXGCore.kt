@@ -1,9 +1,9 @@
 package com.example.ixgcore
 
-import com.example.ixgcore.api.IStationManager
+import com.example.ixgcore.api.IStationsManager
 
 interface IIXGCore {
     val registrationManager: IRegistrationManager
-    val stationManager: IStationManager
+    val stationsManager: IStationsManager
 
 }
