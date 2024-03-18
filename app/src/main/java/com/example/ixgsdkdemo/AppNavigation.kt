@@ -9,6 +9,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.ixgsdkdemo.ui.screens.qrScanner.QRCodeViewModel
 import com.example.ixgsdkdemo.ui.screens.qrScanner.QRScannerScreen
 import com.example.ixgsdkdemo.ui.screens.registration.RegistrationScreen
 
@@ -23,7 +24,12 @@ fun AppNavigation(
     ) {
 
         composable(AppScreenRoute.QRScanner.name) {
-            QRScannerScreen(navController = navController, modifier = Modifier.fillMaxSize())
+            val viewModel: QRCodeViewModel = viewModel()
+            QRScannerScreen(
+                navController = navController,
+                viewModel = viewModel,
+                state = viewModel.uiState,
+                modifier = Modifier.fillMaxSize())
         }
 
         composable(AppScreenRoute.Registration.name + "/{roomCode}/{appName}",

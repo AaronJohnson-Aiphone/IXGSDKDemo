@@ -19,18 +19,14 @@ import com.example.ixgsdkdemo.ui.theme.IXGSDKDemoTheme
 
 @Composable
 fun LoadingScreen(
+    message: String,
     modifier: Modifier = Modifier
 ) {
-//    Image(
-//        modifier = modifier.size(200.dp),
-//        painter = painterResource(R.drawable.loading_img),
-//        contentDescription = stringResource(R.string.loading)
-//    )
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Text(text = "Loading...")
+        Text(text = message)
         Spacer(
             modifier = modifier
                 .height(16.dp)
@@ -50,7 +46,7 @@ fun LoadingScreenPreview() {
         modifier = Modifier.fillMaxSize()
     ) {
         IXGSDKDemoTheme {
-            LoadingScreen()
+            LoadingScreen("Loading...")
         }
     }
 }
