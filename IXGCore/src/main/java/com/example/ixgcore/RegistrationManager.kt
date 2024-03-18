@@ -78,6 +78,7 @@ class RegistrationManager(
             dataStore.setServerUrl(registerResponseData.url)
             dataStore.setSecretKey(registerResponseData.secretKey)
             dataStore.setCert(registerResponseData.cert)
+            dataStore.setRegistrationCode(registerResponseData.registrationCode)
 
             Result.success(null)
 
@@ -125,7 +126,7 @@ class RegistrationManager(
 
     override suspend fun getStatus(): Result<Nothing?> {
         val statusData = StatusRequestData(propertyId = dataStore.getPropertyId(), clientId = dataStore.getAppSlotId(),
-            sysver = constants.sysver, sys = constants.sys, sid = constants.getSidFromDate())
+            sysver = constants.sysver, sys = constants.sys, sid = constants.getSidFromDate(), registrationCode = dataStore.getRegistrationCode())
 
         val statusDataWrapper = StatusRequestDataWrapper(statusData)
         val response = apiService.checkConsentRoom(statusDataWrapper)
@@ -142,7 +143,8 @@ class RegistrationManager(
             Result.success(null)
 
         } else if (response.code() == 410) {
-            Result.failure(Exception("TODO: handle 410"))
+            dataStore.cleanUp()
+            Result.failure(Exception("No longer registered"))
         } else {
             Result.failure(Exception("Unhandled status code ${response.code()}"))
         }

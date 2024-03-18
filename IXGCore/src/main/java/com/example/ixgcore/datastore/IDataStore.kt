@@ -36,5 +36,9 @@ interface IDataStore {
 
     suspend fun getCert(): String
 
+    suspend fun setRegistrationCode(registrationCode: String)
+
+    suspend fun getRegistrationCode(): String
+
     suspend fun cleanUp()
 }

@@ -97,6 +97,12 @@ class DataStore(context: Context) : IDataStore {
 
     override suspend fun getCert(): String = getData(PreferenceKeyDef.CERT).firstOrNull() ?: ""
 
+    override suspend fun setRegistrationCode(registrationCode: String) {
+        setData(registrationCode, PreferenceKeyDef.REGISTRATION_CODE)
+    }
+
+    override suspend fun getRegistrationCode(): String = getData(PreferenceKeyDef.REGISTRATION_CODE).firstOrNull() ?: ""
+
     override suspend fun cleanUp() {
         runBlocking {
             userDataStorePreferences.edit { preferences ->

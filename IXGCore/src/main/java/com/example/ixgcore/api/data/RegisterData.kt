@@ -24,4 +24,5 @@ data class RegisterResponseData(
     @Json(name = "URL")           val url: String = "",
     @Json(name = "SECKEY")        val secretKey: String = "",
     @Json(name = "CERT")          val cert: String = "",
+    @Json(name = "REGCODE")       val registrationCode: String = "",
 )

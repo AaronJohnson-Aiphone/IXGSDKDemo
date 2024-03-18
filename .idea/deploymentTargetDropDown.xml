@@ -11,7 +11,13 @@
       <entry key="app">
         <State />
       </entry>
+      <entry key="certTest()">
+        <State />
+      </entry>
       <entry key="defaultServerURLTest()">
+        <State />
+      </entry>
+      <entry key="secretKeyTest()">
         <State />
       </entry>
     </value>
