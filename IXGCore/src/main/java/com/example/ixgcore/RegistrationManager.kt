@@ -4,19 +4,21 @@ import android.util.Log
 import com.example.ixgcore.api.Constants
 import com.example.ixgcore.api.IService
 import com.example.ixgcore.api.data.ACLAppData
+import com.example.ixgcore.api.data.CheckStatusRequestData
+import com.example.ixgcore.api.data.CheckStatusRequestWrapper
+import com.example.ixgcore.api.data.CheckStatusResponseWrapper
 import com.example.ixgcore.api.data.DeregisterRequestData
-import com.example.ixgcore.api.data.DeregisterRequestDataWrapper
+import com.example.ixgcore.api.data.DeregisterRequestWrapper
 import com.example.ixgcore.api.data.QRRequestData
 import com.example.ixgcore.api.data.QRRequestWrapper
-import com.example.ixgcore.api.data.QRResponseDataWrapper
+import com.example.ixgcore.api.data.QRResponseWrapper
 import com.example.ixgcore.api.data.RegisterRequestData
-import com.example.ixgcore.api.data.RegisterRequestDataWrapper
-import com.example.ixgcore.api.data.RegisterResponseDataWrapper
+import com.example.ixgcore.api.data.RegisterRequestWrapper
+import com.example.ixgcore.api.data.RegisterResponseWrapper
 import com.example.ixgcore.api.data.RenameRequestData
-import com.example.ixgcore.api.data.RenameRequestDataWrapper
-import com.example.ixgcore.api.data.StatusRequestData
-import com.example.ixgcore.api.data.StatusRequestDataWrapper
-import com.example.ixgcore.api.data.StatusResponseDataWrapper
+import com.example.ixgcore.api.data.RenameRequestWrapper
+import com.example.ixgcore.api.data.SetStatusRequestData
+import com.example.ixgcore.api.data.SetStatusRequestWrapper
 import com.example.ixgcore.datastore.DataStore
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
@@ -34,7 +36,7 @@ class RegistrationManager(
 
         return if (response.isSuccessful) {
             val moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
-            val adapter: JsonAdapter<QRResponseDataWrapper> = moshi.adapter(QRResponseDataWrapper::class.java)
+            val adapter: JsonAdapter<QRResponseWrapper> = moshi.adapter(QRResponseWrapper::class.java)
             val networkModel = adapter.fromJson(response.body()!!)
             Log.d("RegistrationManager", "post model conversion: $networkModel")
 
@@ -64,12 +66,12 @@ class RegistrationManager(
         val registerData = RegisterRequestData(sid = constants.getSidFromDate(), sys = constants.sys, sysver = constants.sysver,
             roomCode = dataStore.getQRCode(),  propertyId = dataStore.getPropertyId(), clientId = dataStore.getAppSlotId(), osKind = constants.osKind)
 
-        val registerDataWrapper = RegisterRequestDataWrapper(registerData)
-        val response = apiService.regAppClient(registerDataWrapper)
+        val registerWrapper = RegisterRequestWrapper(registerData)
+        val response = apiService.regAppClient(registerWrapper)
 
         return if (response.isSuccessful) {
             val moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
-            val adapter: JsonAdapter<RegisterResponseDataWrapper> = moshi.adapter(RegisterResponseDataWrapper::class.java)
+            val adapter: JsonAdapter<RegisterResponseWrapper> = moshi.adapter(RegisterResponseWrapper::class.java)
             val networkModel = adapter.fromJson(response.body()!!)
             Log.d("RegistrationManager", "post model conversion: $networkModel")
 
@@ -93,8 +95,8 @@ class RegistrationManager(
         val renameData = RenameRequestData(roomCode = dataStore.getQRCode(), propertyId = dataStore.getPropertyId(), clientId = dataStore.getAppSlotId(),
             appName = appName, sysver = constants.sysver, sys = constants.sys, sid = constants.getSidFromDate())
 
-        val renameDataWrapper = RenameRequestDataWrapper(renameData)
-        val response = apiService.renameAppClient(renameDataWrapper)
+        val renameWrapper = RenameRequestWrapper(renameData)
+        val response = apiService.renameAppClient(renameWrapper)
 
         return if (response.isSuccessful) {
             dataStore.setName(appName)
@@ -111,8 +113,8 @@ class RegistrationManager(
         val deregisterData = DeregisterRequestData(roomCode = dataStore.getQRCode(), propertyId = dataStore.getPropertyId(), clientId = dataStore.getAppSlotId(),
             sysver = constants.sysver, sys = constants.sys, sid = constants.getSidFromDate())
 
-        val deregisterDataWrapper = DeregisterRequestDataWrapper(deregisterData)
-        val response = apiService.unregAppClient(deregisterDataWrapper)
+        val deregisterWrapper = DeregisterRequestWrapper(deregisterData)
+        val response = apiService.unregAppClient(deregisterWrapper)
         return if (response.isSuccessful) {
             dataStore.cleanUp()
             Result.success(null)
@@ -125,15 +127,41 @@ class RegistrationManager(
     }
 
     override suspend fun getStatus(): Result<Nothing?> {
-        val statusData = StatusRequestData(propertyId = dataStore.getPropertyId(), clientId = dataStore.getAppSlotId(),
+        val checkStatusData = CheckStatusRequestData(propertyId = dataStore.getPropertyId(), clientId = dataStore.getAppSlotId(),
             sysver = constants.sysver, sys = constants.sys, sid = constants.getSidFromDate(), registrationCode = dataStore.getRegistrationCode())
 
-        val statusDataWrapper = StatusRequestDataWrapper(statusData)
-        val response = apiService.checkConsentRoom(statusDataWrapper)
+        val checkStatusWrapper = CheckStatusRequestWrapper(checkStatusData)
+        val response = apiService.checkConsentRoom(checkStatusWrapper)
 
         return if (response.isSuccessful) {
             val moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
-            val adapter: JsonAdapter<StatusResponseDataWrapper> = moshi.adapter(StatusResponseDataWrapper::class.java)
+            val adapter: JsonAdapter<CheckStatusResponseWrapper> = moshi.adapter(CheckStatusResponseWrapper::class.java)
+            val networkModel = adapter.fromJson(response.body()!!)
+            Log.d("RegistrationManager", "post model conversion: $networkModel")
+
+            val checkStatusResponseData = networkModel!!.statusResponseData
+            //TODO Handle response data
+
+            Result.success(null)
+
+        } else if (response.code() == 410) {
+            dataStore.cleanUp()
+            Result.failure(Exception("No longer registered"))
+        } else {
+            Result.failure(Exception("Unhandled status code ${response.code()}"))
+        }
+    }
+
+    private suspend fun setStatus(status: Int): Result<Nothing?> {
+        val setStatusData = SetStatusRequestData(propertyId = dataStore.getPropertyId(), clientId = dataStore.getAppSlotId(),
+            sysver = constants.sysver, sys = constants.sys, sid = constants.getSidFromDate(), registrationCode = dataStore.getRegistrationCode())
+
+        val setStatusWrapper = SetStatusRequestWrapper(setStatusData)
+        val response = apiService.setConsentInfo(setStatusWrapper)
+
+        return if (response.isSuccessful) {
+            val moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
+            val adapter: JsonAdapter<CheckStatusResponseWrapper> = moshi.adapter(CheckStatusResponseWrapper::class.java)
             val networkModel = adapter.fromJson(response.body()!!)
             Log.d("RegistrationManager", "post model conversion: $networkModel")
 
@@ -144,7 +172,7 @@ class RegistrationManager(
 
         } else if (response.code() == 410) {
             dataStore.cleanUp()
-            Result.failure(Exception("No longer registered"))
+            Result.failure(Exception("TODO: handle 410"))
         } else {
             Result.failure(Exception("Unhandled status code ${response.code()}"))
         }

@@ -13,7 +13,7 @@ data class QRRequestData (
     @Json(name = "SYSVER") val sysver: String
 )
 
-data class QRResponseDataWrapper(
+data class QRResponseWrapper(
     @Json(name = "BODY") val qrResponseData: QRResponseData
 )
 
