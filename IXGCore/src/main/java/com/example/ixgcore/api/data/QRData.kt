@@ -3,7 +3,7 @@ package com.example.ixgcore.api.data
 import com.squareup.moshi.Json
 
 data class QRRequestWrapper(
-    @Json(name = "BODY") val wrapper: QRRequestData
+    @Json(name = "BODY") val qrRequestData: QRRequestData
 )
 
 data class QRRequestData (

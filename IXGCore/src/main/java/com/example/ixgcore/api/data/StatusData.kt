@@ -3,7 +3,7 @@ package com.example.ixgcore.api.data
 import com.squareup.moshi.Json
 
 data class StatusRequestDataWrapper(
-    @Json(name = "BODY")           val sid: StatusRequestData,
+    @Json(name = "BODY")           val statusRequestData: StatusRequestData,
 )
 
 data class StatusRequestData(
@@ -13,6 +13,10 @@ data class StatusRequestData(
     @Json(name = "SYS")           val sys: String = "",
     @Json(name = "SID")           val sid: String = "",
     @Json(name = "REGCODE")       val registrationCode: String = "",
+)
+
+data class StatusResponseDataWrapper(
+    @Json(name = "BODY")           val statusResponseData: StatusResponseData,
 )
 
 data class StatusResponseData(

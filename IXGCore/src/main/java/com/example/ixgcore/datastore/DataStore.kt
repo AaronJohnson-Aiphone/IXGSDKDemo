@@ -60,7 +60,7 @@ class DataStore(context: Context) : IDataStore {
         setData(propertyId, PreferenceKeyDef.PROPERTY_ID)
     }
 
-    override suspend fun getPropertyId(): Int = getData(PreferenceKeyDef.PROPERTY_ID).firstOrNull()?.toInt() ?: -1
+    override suspend fun getPropertyId(): String = getData(PreferenceKeyDef.PROPERTY_ID).firstOrNull() ?: ""
 
     override suspend fun setQRCode(qrCode: String) {
         setData(qrCode, PreferenceKeyDef.QR_CODE)
@@ -72,19 +72,30 @@ class DataStore(context: Context) : IDataStore {
         setData(appSlotId, PreferenceKeyDef.APP_SLOT_ID)
     }
 
-    override suspend fun getAppSlotId(): Int = getData(PreferenceKeyDef.APP_SLOT_ID).firstOrNull()?.toInt() ?: -1
+    override suspend fun getAppSlotId(): String = getData(PreferenceKeyDef.APP_SLOT_ID).firstOrNull() ?: ""
 
+    override suspend fun setIXGAppInfo(appInfo: IXGAppInfo) {
+        setName(appInfo.name)
+        setPropertyId(appInfo.propertyId)
+        setQRCode(appInfo.qrCode)
+        setAppSlotId(appInfo.appSlotID)
+    }
 
     override suspend fun getIXGAppInfo(): IXGAppInfo {
         return IXGAppInfo(getName(), getPropertyId(), getQRCode(), getAppSlotId())
     }
 
-    override suspend fun setIXGAppInfo(appInfo: IXGAppInfo) {
-        setName(appInfo.name)
-        setPropertyId(appInfo.propertyId.toString())
-        setQRCode(appInfo.qrCode)
-        setAppSlotId(appInfo.appSlotID.toString())
+    override suspend fun setSecretKey(secretKey: String) {
+        setData(secretKey, PreferenceKeyDef.SECRET_KEY)
     }
+
+    override suspend fun getSecretKey(): String = getData(PreferenceKeyDef.SECRET_KEY).firstOrNull() ?: ""
+
+    override suspend fun setCert(cert: String) {
+        setData(cert, PreferenceKeyDef.CERT)
+    }
+
+    override suspend fun getCert(): String = getData(PreferenceKeyDef.CERT).firstOrNull() ?: ""
 
     override suspend fun cleanUp() {
         runBlocking {

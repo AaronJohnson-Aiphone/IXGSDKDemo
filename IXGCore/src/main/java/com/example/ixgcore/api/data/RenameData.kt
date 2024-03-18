@@ -1,11 +1,10 @@
 package com.example.ixgcore.api.data
 
 import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
 
-@JsonClass(generateAdapter = true)
+
 data class RenameRequestDataWrapper(
-    @Json(name = "BODY")           val sid: RenameRequestData,
+    @Json(name = "BODY")           val renameRequestData: RenameRequestData,
 )
 
 data class RenameRequestData(
@@ -16,6 +15,10 @@ data class RenameRequestData(
     @Json(name = "SYSVER")        val sysver: String = "",
     @Json(name = "SYS")           val sys: String = "",
     @Json(name = "SID")           val sid: String = "",
+)
+
+data class RenameResponseDataWrapper(
+    @Json(name = "BODY")           val renameResponseData: RenameResponseData,
 )
 
 data class RenameResponseData(
