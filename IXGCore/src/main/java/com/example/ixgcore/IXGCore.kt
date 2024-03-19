@@ -21,7 +21,7 @@ class IXGCore(applicationContext: Context): IIXGCore {
             if (dataStore.getRegistrationCode().isNotEmpty()) {
                 val registrationStatus = registrationManager.getStatus()
                 if (registrationStatus.isFailure) {
-                    registrationManager.deregister()
+                    dataStore.cleanUp()
                     throw Exception("No longer registered")
                 }
             }

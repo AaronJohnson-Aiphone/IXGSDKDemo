@@ -5,7 +5,7 @@ import com.squareup.moshi.Json
 
 //checkConsentRoom
 data class CheckStatusRequestWrapper(
-    @Json(name = "BODY")           val statusRequestData: CheckStatusRequestData,
+    @Json(name = "BODY")           val checkStatusRequestData: CheckStatusRequestData,
 )
 
 data class CheckStatusRequestData(
@@ -18,7 +18,7 @@ data class CheckStatusRequestData(
 )
 
 data class CheckStatusResponseWrapper(
-    @Json(name = "BODY")           val statusResponseData: CheckStatusResponseData,
+    @Json(name = "BODY")           val checkStatusResponseData: CheckStatusResponseData,
 )
 
 data class CheckStatusResponseData(
@@ -31,7 +31,7 @@ data class CheckStatusResponseData(
 
 //setConsentInfo
 data class SetStatusRequestWrapper(
-    @Json(name = "BODY")           val statusRequestData: SetStatusRequestData,
+    @Json(name = "BODY")           val setStatusRequestData: SetStatusRequestData,
 )
 
 data class SetStatusRequestData(//TODO get proper fields
@@ -44,7 +44,7 @@ data class SetStatusRequestData(//TODO get proper fields
 )
 
 data class SetStatusResponseWrapper(
-    @Json(name = "BODY")           val statusResponseData: SetStatusResponseData,
+    @Json(name = "BODY")           val setStatusResponseData: SetStatusResponseData,
 )
 
 data class SetStatusResponseData(//TODO get proper fields

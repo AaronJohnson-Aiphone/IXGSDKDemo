@@ -19,6 +19,7 @@ import com.example.ixgcore.api.data.RenameRequestData
 import com.example.ixgcore.api.data.RenameRequestWrapper
 import com.example.ixgcore.api.data.SetStatusRequestData
 import com.example.ixgcore.api.data.SetStatusRequestWrapper
+import com.example.ixgcore.api.data.SetStatusResponseWrapper
 import com.example.ixgcore.datastore.DataStore
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
@@ -38,7 +39,7 @@ class RegistrationManager(
             val moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
             val adapter: JsonAdapter<QRResponseWrapper> = moshi.adapter(QRResponseWrapper::class.java)
             val networkModel = adapter.fromJson(response.body()!!)
-            Log.d("RegistrationManager", "post model conversion: $networkModel")
+            Log.d("RegistrationManager", "QRResponseData post model conversion: $networkModel")
 
             val qrResponseData = networkModel!!.qrResponseData
 
@@ -73,7 +74,7 @@ class RegistrationManager(
             val moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
             val adapter: JsonAdapter<RegisterResponseWrapper> = moshi.adapter(RegisterResponseWrapper::class.java)
             val networkModel = adapter.fromJson(response.body()!!)
-            Log.d("RegistrationManager", "post model conversion: $networkModel")
+            Log.d("RegistrationManager", "RegisterResponseData post model conversion: $networkModel")
 
             val registerResponseData = networkModel!!.registerResponseData
 
@@ -137,15 +138,14 @@ class RegistrationManager(
             val moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
             val adapter: JsonAdapter<CheckStatusResponseWrapper> = moshi.adapter(CheckStatusResponseWrapper::class.java)
             val networkModel = adapter.fromJson(response.body()!!)
-            Log.d("RegistrationManager", "post model conversion: $networkModel")
+            Log.d("RegistrationManager", "CheckStatusResponseData post model conversion: $networkModel")
 
-            val checkStatusResponseData = networkModel!!.statusResponseData
+            val checkStatusResponseData = networkModel!!.checkStatusResponseData
             //TODO Handle response data
 
             Result.success(null)
 
         } else if (response.code() == 410) {
-            dataStore.cleanUp()
             Result.failure(Exception("No longer registered"))
         } else {
             Result.failure(Exception("Unhandled status code ${response.code()}"))
@@ -161,17 +161,16 @@ class RegistrationManager(
 
         return if (response.isSuccessful) {
             val moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
-            val adapter: JsonAdapter<CheckStatusResponseWrapper> = moshi.adapter(CheckStatusResponseWrapper::class.java)
+            val adapter: JsonAdapter<SetStatusResponseWrapper> = moshi.adapter(SetStatusResponseWrapper::class.java)
             val networkModel = adapter.fromJson(response.body()!!)
-            Log.d("RegistrationManager", "post model conversion: $networkModel")
+            Log.d("RegistrationManager", "SetStatusResponseData post model conversion: $networkModel")
 
-            val statusResponseData = networkModel!!.statusResponseData
+            val setStatusResponseData = networkModel!!.setStatusResponseData
             //TODO Handle response data
 
             Result.success(null)
 
         } else if (response.code() == 410) {
-            dataStore.cleanUp()
             Result.failure(Exception("TODO: handle 410"))
         } else {
             Result.failure(Exception("Unhandled status code ${response.code()}"))

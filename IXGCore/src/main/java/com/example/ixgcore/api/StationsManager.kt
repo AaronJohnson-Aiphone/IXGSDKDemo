@@ -44,7 +44,7 @@ class StationsManager(
         for(i in 0 until addressBookData.stationNumbers.size){
             val station = Station(number = addressBookData.stationNumbers[i].toInt(),
                 name = addressBookData.stationNames[i].substringAfter("&&&"),
-                type = addressBookData.stationTypes[i], canUnlock = addressBookData.unlockAuthorization[i], soundCodec = addressBookData.soundCodec[i])
+                type = StationType.getByValue(addressBookData.stationTypes[i]), canUnlock = addressBookData.unlockAuthorization[i] == 1)
             stations.add(station)
         }
         return stations
