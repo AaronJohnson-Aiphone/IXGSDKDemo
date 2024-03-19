@@ -21,36 +21,23 @@ fun CameraView(
         .enableAutoZoom()
         .build()
 
-//    val qrCode by viewModel.qrCode.collectAsState()
-
-//    if (qrCode.isEmpty()) {
-//        Text(text = "Need to scan")
-//    } else {
-//        Text(text = "Found code: $qrCode")
-//    }
-
     LaunchedEffect(Unit, block =  {
         val scanner = GmsBarcodeScanning.getClient(context, options)
         scanner.startScan()
             .addOnSuccessListener { barcode ->
-                // task completed successfully
                 val rawValue: String? = barcode.rawValue
                 val newValue = rawValue ?: ""
                 Log.v("QR_SCAN_SCREEN", "Scan result: $newValue")
                 if(!rawValue.isNullOrEmpty()) {
-//                    viewModel.updateQrCode(newValue)
                     viewModel.sendQRCode(newValue)
                 } else
                     Log.v("QR_SCAN_SCREEN", "String is NULL or EMPTY")
             }
             .addOnCanceledListener {
-                // task canceled
                 // TODO: Show dialog to illustrate that they should scan the code
                 Log.v("QR_SCAN_SCREEN", "Scanner Canceled")
             }
             .addOnFailureListener { e ->
-                // task failed with an exception
-                //viewModel.errorMessage = e.message.toString()
                 // TODO: Show dialog providing failure reason
                 Log.v("QR_SCAN_SCREEN", "Scanner Failed: ${e.message}")
             }

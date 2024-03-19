@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
 class RegistrationViewModel(
-    registrationManager: RegistrationManager,
+    private val registrationManager: RegistrationManager,
 ) : ViewModel() {
 
     var appName: MutableStateFlow<String> = MutableStateFlow("My Intercom App")
@@ -19,7 +19,7 @@ class RegistrationViewModel(
 
     private fun register() {
         viewModelScope.launch {
-            // TODO: handle register
+            registrationManager.register(null)
         }
     }
 }

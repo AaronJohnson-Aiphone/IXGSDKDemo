@@ -21,7 +21,6 @@ fun QRScannerScreen(
     state: QRCodeScreenState,
     modifier: Modifier = Modifier,
 ) {
-//    val roomCode by viewModel.qrCode.collectAsState()
 
     when (state) {
         is QRCodeScreenState.Scanning -> CameraView(viewModel = viewModel, modifier = Modifier.fillMaxSize())
