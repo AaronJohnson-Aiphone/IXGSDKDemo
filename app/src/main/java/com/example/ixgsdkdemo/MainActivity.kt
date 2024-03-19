@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.ixgsdkdemo.ui.theme.IXGSDKDemoTheme
 
@@ -18,7 +19,9 @@ class MainActivity : ComponentActivity() {
                 Surface(
                     modifier = Modifier.fillMaxSize()
                 ) {
-                    AppNavigation(activity = this)
+                    AppNavigation(
+                        appContext = applicationContext
+                    )
                 }
             }
         }
@@ -32,8 +35,10 @@ fun MainActivityPreview() {
         Surface(
             modifier = Modifier.fillMaxSize()
         ) {
+            val context = LocalContext.current
             AppNavigation(
-                activity = MainActivity())
+                appContext = context
+            )
         }
     }
 }

@@ -24,7 +24,8 @@ fun LoadingScreen(
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+        verticalArrangement = Arrangement.Center,
+        modifier = Modifier.fillMaxSize()
     ) {
         Text(text = message)
         Spacer(
@@ -42,9 +43,7 @@ fun LoadingScreen(
 @Preview(showSystemUi = true)
 @Composable
 fun LoadingScreenPreview() {
-    Surface(
-        modifier = Modifier.fillMaxSize()
-    ) {
+    Surface {
         IXGSDKDemoTheme {
             LoadingScreen("Loading...")
         }
