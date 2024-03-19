@@ -1,18 +1,25 @@
 package com.example.ixgsdkdemo.ui.screens.registration
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.ixgcore.RegistrationManager
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
 
-class RegistrationViewModel(savedStateHandle: SavedStateHandle) : ViewModel() {
+class RegistrationViewModel(
+    private val registrationManager: RegistrationManager,
+) : ViewModel() {
 
-    private val roomCode = checkNotNull(savedStateHandle.get<String>("roomCode"))
-    var appName = checkNotNull(savedStateHandle.get<String>("appName"))
+    var appName: MutableStateFlow<String> = MutableStateFlow("My Intercom App")
 
     fun handleRegistrationClicked(): Boolean {
-        register(roomCode)
+        register()
         return true
     }
 
-    private fun register(roomCode: String) {
+    private fun register() {
+        viewModelScope.launch {
+            registrationManager.register(null)
+        }
     }
 }

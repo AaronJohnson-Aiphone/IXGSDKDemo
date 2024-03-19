@@ -1,36 +1,36 @@
 package com.example.ixgsdkdemo.ui.screens.registration
 
-import android.app.Activity
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.SavedStateHandle
-import com.example.ixgsdkdemo.MainActivity
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
+import com.example.ixgcore.RegistrationManager
+import com.example.ixgsdkdemo.AppScreenRoute
 import com.example.ixgsdkdemo.ui.theme.IXGSDKDemoTheme
 
 
 @Composable
 fun RegistrationScreen(
+    navController: NavController,
     viewModel: RegistrationViewModel,
-    activity: Activity
 ) {
 
-    val configuration = LocalConfiguration.current
-    val screenWidthFloat = configuration.screenWidthDp.toFloat()
-    val buttonWidth = (screenWidthFloat * 0.6).toInt()
+    val appName by viewModel.appName.collectAsState()
 
     Column (
         verticalArrangement = Arrangement.Center,
@@ -46,9 +46,9 @@ fun RegistrationScreen(
         )
 
         OutlinedTextField(
-            value = viewModel.appName,
+            value = appName,
             onValueChange = { text ->
-                viewModel.appName = text
+                viewModel.appName.value = text
             },
             modifier = Modifier
                 .fillMaxWidth()
@@ -58,8 +58,7 @@ fun RegistrationScreen(
         Button(onClick = {
             val success = viewModel.handleRegistrationClicked()
             if(success) {
-                // TODO: Go to stations list
-//                navController.navigate(AppScreenRoute.StationsList.name)
+                navController.navigate(AppScreenRoute.StationsList.name)
             }
             else {
                 // TODO: Replace with dialog
@@ -80,13 +79,17 @@ fun RegistrationScreen(
 fun RegistrationScreenPreview() {
 
     IXGSDKDemoTheme {
-        val stateHandle = SavedStateHandle()
-        stateHandle["roomCode"] = "abcde1234"
-        stateHandle["appName"] = "Intercom App"
-        val viewModel = RegistrationViewModel(stateHandle)
+        val navController = rememberNavController()
+//        val stateHandle = SavedStateHandle()
+//        stateHandle["roomCode"] = "abcde1234"
+//        stateHandle["appName"] = "Intercom App"
+        val context = LocalContext.current
+        val registrationManager = RegistrationManager(context)
+        val viewModel = RegistrationViewModel(
+            registrationManager = registrationManager)
         RegistrationScreen(
+            navController = navController,
             viewModel = viewModel,
-            activity = MainActivity()
         )
     }
 }
