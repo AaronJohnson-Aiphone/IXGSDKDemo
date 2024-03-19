@@ -2,9 +2,9 @@ package com.example.ixgcore
 
 class IXGAppInfo(
     var name: String,
-    var propertyId: Int,
+    var propertyId: String,
     var qrCode: String,
-    var appSlotID: Int
+    var appSlotID: String
 ) {
 
 }

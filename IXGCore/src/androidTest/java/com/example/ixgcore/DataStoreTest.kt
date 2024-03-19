@@ -47,7 +47,7 @@ class DataStoreTest {
 
         runBlocking {
             dataStore.setPropertyId(propertyId)
-            assert(dataStore.getPropertyId() == propertyId.toInt())
+            assert(dataStore.getPropertyId() == propertyId)
         }
     }
 
@@ -63,7 +63,7 @@ class DataStoreTest {
     fun appSlotIdTest() {
         runBlocking {
             dataStore.setAppSlotId("4")
-            assert(dataStore.getAppSlotId() == 4)
+            assert(dataStore.getAppSlotId() == "4")
         }
     }
 
@@ -76,21 +76,37 @@ class DataStoreTest {
             dataStore.setAppSlotId("123")
             val ixgAppInfo = dataStore.getIXGAppInfo()
             assert(ixgAppInfo.name == "IXG")
-            assert(ixgAppInfo.propertyId == 123)
+            assert(ixgAppInfo.propertyId == "123")
             assert(ixgAppInfo.qrCode == "123")
-            assert(ixgAppInfo.appSlotID == 123)
+            assert(ixgAppInfo.appSlotID == "123")
         }
     }
 
     @Test
     fun ixgAppInfoSetTest() {
         runBlocking {
-            val ixgAppInfo = IXGAppInfo("IXG", 123, "123", 123)
+            val ixgAppInfo = IXGAppInfo("IXG", "123", "123", "123")
             dataStore.setIXGAppInfo(ixgAppInfo)
             assert(dataStore.getName() == "IXG")
-            assert(dataStore.getPropertyId() == 123)
+            assert(dataStore.getPropertyId() == "123")
             assert(dataStore.getQRCode() == "123")
-            assert(dataStore.getAppSlotId() == 123)
+            assert(dataStore.getAppSlotId() == "123")
+        }
+    }
+
+    @Test
+    fun secretKeyTest() {
+        runBlocking {
+            dataStore.setSecretKey("123")
+            assert(dataStore.getSecretKey() == "123")
+        }
+    }
+
+    @Test
+    fun certTest() {
+        runBlocking {
+            dataStore.setCert("123")
+            assert(dataStore.getCert() == "123")
         }
     }
 
