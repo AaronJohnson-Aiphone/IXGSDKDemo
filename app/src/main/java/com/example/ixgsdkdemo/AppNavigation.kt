@@ -45,11 +45,7 @@ fun AppNavigation(
             )
         }
 
-        composable(AppScreenRoute.Registration.name,
-//            arguments = listOf(
-//                navArgument("roomCode") { type = NavType.StringType},
-//                navArgument("appName") { type = NavType.StringType })
-        ) {
+        composable(AppScreenRoute.Registration.name) {
 
             val registrationViewModel: RegistrationViewModel by remember {
                 mutableStateOf(RegistrationViewModel(registrationManager = registrationManager))
