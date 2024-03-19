@@ -5,7 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.ixgcore.RegistrationManager
+import com.example.ixgcore.IRegistrationManager
 import kotlinx.coroutines.launch
 
 sealed interface QRCodeScreenState {
@@ -16,7 +16,7 @@ sealed interface QRCodeScreenState {
 }
 
 class QRCodeViewModel(
-    private val registrationManager: RegistrationManager
+    private val registrationManager: IRegistrationManager
 ): ViewModel() {
     var uiState: QRCodeScreenState by mutableStateOf(QRCodeScreenState.Scanning)
         private set
@@ -28,7 +28,6 @@ class QRCodeViewModel(
             } else if (result.isFailure) {
                 uiState = QRCodeScreenState.Error
             }
-            uiState = QRCodeScreenState.Finished
         }
     }
 }

@@ -12,12 +12,15 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.ixgcore.IXGCore
+import com.example.ixgcore.api.Station
 import com.example.ixgsdkdemo.ui.theme.IXGSDKDemoTheme
 
 @Composable
@@ -45,14 +48,16 @@ fun StationsListScreen(
 fun StationsListViewPreview() {
     IXGSDKDemoTheme {
         val navController = rememberNavController()
+        val context = LocalContext.current
+        val stationsManager = IXGCore(context).stationsManager
         Surface {
-            StationsListScreen(navController, StationsListViewModel())
+            StationsListScreen(navController, StationsListViewModel(stationsManager = stationsManager))
         }
     }
 }
 
 @Composable
-fun StationItemRow(station: IXGStation) {
+fun StationItemRow(station: Station) {
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
         modifier = Modifier
@@ -65,7 +70,7 @@ fun StationItemRow(station: IXGStation) {
                 fontWeight = FontWeight.Bold
             )
             Text(
-                text = station.description,
+                text = station.type.toString(),
                 fontStyle = FontStyle.Italic
             )
         }

@@ -8,7 +8,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.example.ixgcore.RegistrationManager
+import com.example.ixgcore.IXGCore
 import com.example.ixgsdkdemo.AppScreenRoute
 import com.example.ixgsdkdemo.ui.screens.common.ErrorScreen
 import com.example.ixgsdkdemo.ui.screens.common.LoadingScreen
@@ -23,10 +23,10 @@ fun QRScannerScreen(
 ) {
 
     when (state) {
-        is QRCodeScreenState.Scanning -> CameraView(viewModel = viewModel, modifier = Modifier.fillMaxSize())
-        is QRCodeScreenState.Loading -> LoadingScreen(message = "Sending QR Code...")
-        is QRCodeScreenState.Finished -> navController.navigate(AppScreenRoute.Registration.name)
-        is QRCodeScreenState.Error -> ErrorScreen(message = "Error...")
+        QRCodeScreenState.Scanning -> CameraView(viewModel = viewModel, modifier = Modifier.fillMaxSize())
+        QRCodeScreenState.Loading -> LoadingScreen(message = "Sending QR Code...")
+        QRCodeScreenState.Finished -> navController.navigate(AppScreenRoute.Registration.name)
+        QRCodeScreenState.Error -> ErrorScreen(message = "Error...")
     }
 }
 
@@ -37,7 +37,7 @@ private fun QRScannerPreview_Loading() {
         Surface {
             val navController = rememberNavController()
             val context = LocalContext.current
-            val registrationManager = RegistrationManager(context)
+            val registrationManager = IXGCore(context).registrationManager
             val viewModel = QRCodeViewModel(registrationManager = registrationManager)
             QRScannerScreen(
                 navController = navController,
@@ -54,7 +54,7 @@ private fun QRScannerPreview_Scanning() {
         Surface {
             val navController = rememberNavController()
             val context = LocalContext.current
-            val registrationManager = RegistrationManager(context)
+            val registrationManager = IXGCore(context).registrationManager
             val viewModel = QRCodeViewModel(registrationManager = registrationManager)
             QRScannerScreen(
                 navController = navController,

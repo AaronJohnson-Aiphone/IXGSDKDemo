@@ -19,7 +19,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.example.ixgcore.RegistrationManager
+import com.example.ixgcore.IXGCore
 import com.example.ixgsdkdemo.AppScreenRoute
 import com.example.ixgsdkdemo.ui.theme.IXGSDKDemoTheme
 
@@ -31,6 +31,12 @@ fun RegistrationScreen(
 ) {
 
     val appName by viewModel.appName.collectAsState()
+    val registerResult by viewModel.registerResult.collectAsState()
+
+    if (registerResult != null) {
+        registerResult!!.isSuccess
+            navController.navigate(AppScreenRoute.StationsList.name)
+    }
 
     Column (
         verticalArrangement = Arrangement.Center,
@@ -56,14 +62,7 @@ fun RegistrationScreen(
         )
 
         Button(onClick = {
-            val success = viewModel.handleRegistrationClicked()
-            if(success) {
-                navController.navigate(AppScreenRoute.StationsList.name)
-            }
-            else {
-                // TODO: Replace with dialog
-                println("API Call failed")
-            }
+            viewModel.handleRegistrationClicked()
         },
             modifier = Modifier
                 .padding(64.dp)
@@ -80,11 +79,8 @@ fun RegistrationScreenPreview() {
 
     IXGSDKDemoTheme {
         val navController = rememberNavController()
-//        val stateHandle = SavedStateHandle()
-//        stateHandle["roomCode"] = "abcde1234"
-//        stateHandle["appName"] = "Intercom App"
         val context = LocalContext.current
-        val registrationManager = RegistrationManager(context)
+        val registrationManager = IXGCore(context).registrationManager
         val viewModel = RegistrationViewModel(
             registrationManager = registrationManager)
         RegistrationScreen(
