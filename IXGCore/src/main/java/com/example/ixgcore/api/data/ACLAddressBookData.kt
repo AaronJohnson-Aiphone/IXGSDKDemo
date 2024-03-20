@@ -8,5 +8,5 @@ data class ACLAddressBookData(
     @Json(name = "CALLTONM")     val stationNames: List<String>,
     @Json(name = "TYPE")         val stationTypes:List<Int>,
     @Json(name = "UNLOCK")       val unlockAuthorization: List<Int>,
-    @Json(name = "SOUNDCODEC")   val soundCodec: List<Int>,
+    @Json(name = "SOUNDCODEC")   val soundCodec: List<Int>,//Not used
 )

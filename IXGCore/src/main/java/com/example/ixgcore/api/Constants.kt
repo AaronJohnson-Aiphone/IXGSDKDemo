@@ -10,8 +10,8 @@ class Constants {
     val defaultServerURl = "https://api-ixg1-r2.ixg.aiphone-app.net"
     val osKind = "1"
 
-    val baseURL = "https://api-ixg1-r2.ixg.aiphone-app.net/"// Phase 1A
-//    val baseURL = "https://api-ixg3-r2.ixg.aiphone-app.net"
+//    val baseURL = "https://api-ixg1-r2.ixg.aiphone-app.net/"// Phase 1A
+    val baseURL = "https://api-ixg3-r2.ixg.aiphone-app.net"
 
     fun getSidFromDate(): String {
         return SimpleDateFormat("yyyyMMddHHmmssSSSSSS", Locale.getDefault()).format(Date())

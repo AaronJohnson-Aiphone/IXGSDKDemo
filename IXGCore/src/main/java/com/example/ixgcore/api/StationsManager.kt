@@ -25,7 +25,7 @@ class StationsManager(
             val moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
             val adapter: JsonAdapter<AddressBookResponseWrapper> = moshi.adapter(AddressBookResponseWrapper::class.java)
             val networkModel = adapter.fromJson(response.body()!!)
-            Log.d("StationManager", "post model conversion: $networkModel")
+            Log.d("StationsManager", "AddressBookResponseData post model conversion: $networkModel")
 
             val addressBookData = networkModel!!.addressBookResponseData
             val stations = convertACLAddressBookToStationList(addressBookData.addressBookData)

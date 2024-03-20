@@ -6,7 +6,6 @@ import com.example.ixgcore.api.IStationsManager
 import com.example.ixgcore.api.Module
 import com.example.ixgcore.api.StationsManager
 import com.example.ixgcore.datastore.DataStore
-import kotlinx.coroutines.runBlocking
 
 class IXGCore(applicationContext: Context): IIXGCore {
     private val dataStore = DataStore(applicationContext)
@@ -16,16 +15,21 @@ class IXGCore(applicationContext: Context): IIXGCore {
     override val registrationManager: IRegistrationManager = RegistrationManager(dataStore, apiService, constants)
     override val stationsManager: IStationsManager = StationsManager(dataStore, apiService, constants)
 
-    init {//checks if user thinks they are registered, and if so, checks if they are actually registered
-        runBlocking {
-            if (dataStore.getRegistrationCode().isNotEmpty()) {
-                val registrationStatus = registrationManager.getStatus()
-                if (registrationStatus.isFailure) {
+
+    //checks if user thinks they are registered, and if so, checks if they are actually registered
+    override suspend fun getStatus(): Result<Nothing?> {
+        if (dataStore.getRegistrationCode().isNotEmpty()) {
+            val registrationStatus = registrationManager.getStatus()
+            if (registrationStatus.isFailure) {
+                val message = registrationStatus.exceptionOrNull()!!.message
+                if(message == "No longer registered") {
                     dataStore.cleanUp()
-                    throw Exception("No longer registered")
+                    return Result.failure(Exception(message))
                 }
             }
+
         }
+        return Result.success(null)
     }
 
 }
